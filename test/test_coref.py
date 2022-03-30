@@ -348,3 +348,25 @@ class TestHeuristicParser(unittest.TestCase):
              ('a', 'DET', 'O'),
              ('good', 'ADJ', 'O'),
              ('leader', 'NOUN', 'O')])
+
+    @unittest.skip(" this package does not aim to be SOTA or has illusions of handling some of these")
+    def test_known_failures(self):
+        # know how to handle one of these? send a PR!
+        # this package does not aim to be SOTA or has illusions of handling some of these
+
+        # failures to ignore
+        self.assertEqual(solver.replace_corefs("John called him"), "John called him")  # John called John
+        self.assertEqual(solver.replace_corefs("John sent him his tax forms"),
+                         "John sent him John tax forms")  # John sent John John tax forms
+
+        # difficulty level: HARD
+        # "John yelled at Jeff because he said he went back on his promise to fix his machines before he went home"
+        # "John yelled at Jeff because Jeff said John went back on John promise to fix Jeff machines before John went home"
+        # "John yelled at Jeff because Jeff said John went back on John promise to fix Jeff machines before Jeff went home"
+        # "John yelled at Jeff because Jeff said John went back on John promise to fix Jeff machines before John went home"
+        # "John yelled at Jeff because Jeff said John went back on John promise to fix John machines before Jeff went home"
+        # "John yelled at Jeff because Jeff said John went back on John promise to fix John machines before John went home"
+        self.assertEqual(
+            solver.replace_corefs(
+                "John yelled at Jeff because he said he went back on his promise to fix his machines before he went home"),
+            "John yelled at Jeff because Jeff said John went back on John promise to fix Jeff machines before John went home")  # Jeff Jeff Jeff Jeff Jeff Jeff ...
