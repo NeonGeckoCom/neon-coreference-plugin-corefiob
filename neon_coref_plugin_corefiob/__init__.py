@@ -38,8 +38,16 @@ class CorefIOB(str, enum.Enum):
 class CorefIOBSolver(CoreferenceSolverEngine):
     def __init__(self, config=None):
         super().__init__(config)
-        self.tokenizer = OVOSTokenizerFactory.create()
-        self.postagger = OVOSPosTaggerFactory.create({"module": "neon-postag-plugin-spacy"})
+        if self.config.get("tokenizer"):
+            self.tokenizer = OVOSTokenizerFactory.create({"module": self.config["tokenizer"]})
+        else:  # global config tokenizer default
+            self.tokenizer = OVOSTokenizerFactory.create()
+
+        if self.config.get("postagger"):
+            self.postagger = OVOSPosTaggerFactory.create({"module": self.config["postagger"]})
+        else:  # global config postagger default
+            self.postagger = OVOSPosTaggerFactory.create()
+
         self.load_lang("en")
 
     def load_lang(self, lang):

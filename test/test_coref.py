@@ -2,7 +2,7 @@ import unittest
 
 from neon_coref_plugin_corefiob import CorefIOBSolver
 
-solver = CorefIOBSolver()
+solver = CorefIOBSolver({"postagger": "neon-postag-plugin-spacy"})
 
 
 class TestHeuristicParser(unittest.TestCase):
