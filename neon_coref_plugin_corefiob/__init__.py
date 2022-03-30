@@ -392,7 +392,7 @@ class CorefIOBSolver(CoreferenceSolverEngine):
     def iob_tag(self, postagged_toks):
         if isinstance(postagged_toks, str):
             postagged_toks = self.pos_tag(postagged_toks)
-        iob = [(token, tag, "O") for (token, tag) in postagged_toks]
+        iob = [(token, tag, "O") for (start, end, token, tag) in postagged_toks]
 
         iob, ents = self._tag_entities(iob)
         iob, prons = self._tag_prons(iob, ents)
